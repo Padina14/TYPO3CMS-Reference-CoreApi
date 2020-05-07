@@ -30,12 +30,28 @@ Creating a new Symfony Command in Your Extension
 
 .. rst-class:: bignums-xxl
 
-#. Add :file:`Configuration/Commands.php` to your extension
+#. Register Commands
 
-   TYPO3 looks in this file for configured commands. It should
-   return a simple array with the command name and class.
+   Commands can be configured via :ref:`DependencyInjection` or a PHP file.
+   For example to add a command named `yourext:dothings`.
 
-   For example to add a command named `yourext:dothings`::
+   Register via DI in :file:`Configuration/Services.yaml`::
+
+     services:
+       _defaults:
+         autowire: true
+         autoconfigure: true
+         public: false
+
+       Vendor\Extension\:
+         resource: '../Classes/*'
+
+       Vendor\Extension\Command\DoThingsCommand:
+         tags:
+           - name: 'console.command'
+             command: 'yourext:dothings'
+
+   Or register :file:`Configuration/Commands.php`::
 
        return [
            'yourext:dothings' => [
@@ -142,7 +158,25 @@ Deactivating the Command in Scheduler
     :doc:`t3core:Changelog/9.4/Feature-85991-ExcludeSymfonyCommandsFromScheduler`
 
 By default, the command can be used in the scheduler too. You can deactivate
-this by setting `schedulable` to `false` in :file:`Configuration/Commands.php`::
+this by setting `schedulable` to `false` in :file:`Configuration/Services.yaml`::
+
+   services:
+     _defaults:
+       autowire: true
+       autoconfigure: true
+       public: false
+
+     Vendor\Extension\:
+       resource: '../Classes/*'
+
+     Vendor\Extension\Command\DoThingsCommand:
+       tags:
+         - name: 'console.command'
+           command: 'yourext:dothings'
+           schedulable: false
+
+
+Or inside of :file:`Configuration/Commands.php`::
 
    return [
        'yourext:dothings' => [
@@ -150,7 +184,6 @@ this by setting `schedulable` to `false` in :file:`Configuration/Commands.php`::
            'schedulable' => false,
        ],
    ];
-
 
 Initialize Backend User
 -----------------------
