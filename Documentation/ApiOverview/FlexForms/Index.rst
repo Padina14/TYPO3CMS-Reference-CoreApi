@@ -122,6 +122,23 @@ Steps to Perform (Extension Developer)
    :ref:`from a PHP function <read-flexforms-php>` (without using the
    Extbase framework), from :ref:`TypoScript <read-flexforms-ts>` or
    from within a :ref:`Fluid template <read-flexforms-fluid>`.
+   
+   .. tip::
+   
+      You have to copy the settings in TypoScript, if you want to use the settings 
+      in flexforms and in typoscript.
+   
+   .. code-block:: typoscript
+
+      plugin.tx_myextension_myplugin {
+          # copy settings to save the settings from flexforms 
+          # without this: the typoscript-setting will override the flexform-settings
+         settings < plugin.tx_ivmmonthlystatistics_webtable.settings
+         settings.myTyposcriptSpecial {
+            # defined by constants  
+            superInfo.default = {$plugin.tx_myextension_myplugin.settings.superinfo}
+         }
+      }
 
 
 More Examples
